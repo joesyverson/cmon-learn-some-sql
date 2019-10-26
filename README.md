@@ -34,6 +34,18 @@ Finally, we’ll have a look at the table for model Test that we just created: `
 
 Exit My S Q L: `EXIT`;
 
-Before we wrap up this part, let’s get rid of the Test model and its corresponding table : `rails d model test`
+Before we wrap up this part, let’s get rid of the Test model and its corresponding table :
+
+`rails d model test
+rails g migration drop_tests
+`
+
+In `db/migrate`, select the migration file with the timestamp followed by `_drop_tests.rb`. Between `def change` and `end`, write `drop_table: tests`.
+
+Then, in terminal:
+
+`rails db:migrate`
+
+This will remove the table generated with the model.
 
 In the following part, we’ll seed a database using Rails, then compare syntax between Active Record and S Q L.
