@@ -1,0 +1,2 @@
+class BranchEmployee < ApplicationRecord
+end
