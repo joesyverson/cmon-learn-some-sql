@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_28_165823) do
+ActiveRecord::Schema.define(version: 2019_10_28_170411) do
 
   create_table "branch_employees", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "branch_id"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 2019_10_28_165823) do
   create_table "sales", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "client_id"
-    t.integer "sale"
+    t.integer "amount"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
