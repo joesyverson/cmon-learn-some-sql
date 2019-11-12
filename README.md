@@ -116,3 +116,84 @@ rails g model Sale employee_id:integer client_id:integer amount:integer
 All done. Now migrate to create the schema: rails db:migrate .
 
 We now have a database linked up with our Rails application. In the next part, we’ll fill out our models with some associations that take advantage of the join tables that connect them.
+
+### 4
+
+In the previous three parts of this series, we created a Rails app to ground our database. Then we built a database using Active Record. Now, finally, it’s time to use that database. We’ll look at the basic setters and getters that Active Record gave us when filled in our models, then explore how we can get the same results using S Q L.
+
+Be sure to copy and paste the seed file provided at the close of the previous part into your db/seed.rb file. cd into your project directory ( cmon-learn-some-sql ) from the terminal. Run:
+
+rails db:reset
+rails console
+
+Open up a second terminal session. In this one, we’ll start a My S Q L session. Type mysql -u root -p and enter your password when prompted. The two prompts side by side should look similar to the below.
+
+Rails has given us direct access to our database by virtue of being in the directory where our app is located. But, we’ll need to navigate to the corresponding database in My S Q L. If you type SHOW DATABASES; at your S Q L prompt, you’ll see that Rails has created for us two — one suffixed development and the other suffixed test. Type:
+
+USE cmon_learn_some_sql_development;
+
+You can look at the tables we created with the command SHOW TABLES;. If you want the equivalent behavior in the console, go figure out this Stack Exchange thread or accept that learning S Q L may actually make your life easier, not harder. We can view individual table schema with the DESCRIBE command. For example:
+
+DESCRIBE employees;
+
+This time Active Record does have a simple equivalent. It’s:
+
+Employee.column_names
+
+Maybe the simplest thing we can ask for from a database besides the above is all of the entries on a given table. In Ruby:
+
+Employee.All
+
+In S Q L:
+
+SELECT *
+FROM employees;
+
+The SELECT keyword indicates that we want to read data from a named table. Like in many circumstance in computational language, the * indicates “all”. However, in our Ruby console, all refers to all instances of the class Employee, and all attributes of those instances. However, * refers to all columns for the table employees. All rows of the table will be returned unless we specify otherwise.
+
+Active Record will create your corresponding table as a plural of whatever the model name is. For example, the model named “Employee” becomes the table named “employees”. Hit enter for each and note the difference in formatting. Instead of a linear array of objects, you’ll get a two-dimensional table, which in terms of readability is far better.
+
+https://medium.com/@josephgavinsyverson/s-q-l-through-active-record-pt-four-d1b93b4b8096
+
+Now let’s log the salary for each employee, along side their names. In Ruby:
+
+Employee.all.each do |emp|
+  puts "#{emp.name}: #{emp.salary}"
+end
+
+In S Q L:
+
+SELECT name, salary
+FROM employees;
+
+If we want to query for a specific employee, we can use a WHERE statement. In Ruby, we can effectively get S Q L's WHERE statement like this:
+
+Employee.all.select do |emp|
+  emp.name if emp.name == "Pam Beesly"
+end
+
+In S Q L:
+
+SELECT *
+FROM employees
+WHERE name = "Pam Beesly"
+
+Active Record gives us the method where as well, so the above Ruby expression is effectively equivalent to:
+
+Employee.all.where(name: "Pam Beesly")
+
+Before we wrap, here are a few challenges that review the queries we’ve taken a look at. Write the corresponding S Q L queries for each expression or block of Ruby below.
+
+Branch.all
+
+Employee.all.each do |emp|
+  puts "#{emp.id}: #{emp.birth_date}"
+end
+
+Client.all.select do |cli|
+  cli.name == "John Daly, Law LLC"
+end
+
+Good. If you've followed along thus far, you'll have noticed that Active Record methods are quite alike the S Q L queries that they write. At least so far. That's no coincidence. Active Record is an instance of object relational mapping because for each method it provides us, that method has a relative expression in S Q L. As in all computational languages, the syntax of these methods follow a strict pattern for the sake of computer that has to interpret an expression from one language and translate it to another.
+
+In the next part, we'll continue to explore how to read data from our database using join statements and nested queries.
